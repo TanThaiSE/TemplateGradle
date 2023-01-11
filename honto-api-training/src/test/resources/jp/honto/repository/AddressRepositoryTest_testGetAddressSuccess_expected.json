@@ -1,0 +1,19 @@
+{
+    "member_id":"^003001510",
+    "address_id":"9999999999",
+    "address_name":"文庫",
+    "foreign_flag":false,
+    "country_code":"JPN",
+    "country_name":"JAPAN",
+    "name":"木村",
+    "kana":"きむら",
+    "postal_code":"1620062",
+    "prefecture_code":"13",
+    "prefecture_name":"東京",
+    "city":"東京",
+    "building_name":"ABCビル1001",
+    "company_name":"第1営業部",
+    "tel_no":"0312345678",
+    "personal_flag":true,
+    "default":false
+}

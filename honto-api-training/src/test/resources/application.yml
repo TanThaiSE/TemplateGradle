@@ -1,0 +1,111 @@
+spring:
+  application:
+    name: honto-api-member
+  datasource:
+#    driverClassName: org.sqlite.JDBC
+#    url: jdbc:sqlite:honto.db
+    driverClassName: oracle.jdbc.OracleDriver
+    url: jdbc:oracle:thin:@127.0.0.1:1521:REFDB
+    username: honto2
+    password: HONTO2DF
+    schema: HONTO2
+    poolName: default
+    maximumPoolSize: 1
+    maxLifetime: 600000
+    minimumIdle: 1
+    connectionTimeout: 30000
+  jackson:
+    property-naming-strategy: CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES
+  redis:
+    host: localhost
+server:
+  port: 8080
+  tomcat:
+    basedir: '/var/'
+logging:
+  enabled: true
+  path: /var/log/api
+  pattern: "time:%{yyyy-MM-dd HH:mm:ss.mmm}t\tthread:%I\tmethod:%m\tstatus:%s\trestime:%D\turi:%U\tparam:%q\tip:%h"
+  prefix: access.log.
+  fileDateFormat: yyyyMMdd
+  cron: 0 0 0 * * *
+management:
+  port: 8081
+endpoints:
+  health:
+    sensitive: false
+honto:
+  datasource:
+    pooling:
+      name: default
+      # millisec
+      maxLifetime: 1800000
+      idleTimeout: 600000
+#      minimumIdle: 5
+      maximumPoolSize: 10
+#      readOnly: true
+notification:
+  ## 全ユーザ向け通知のレコード生存時間（秒）.
+  allUserNotificationTtl: 3600
+  ## 通知情報（ゲスト）のレコード生存時間（秒）.
+  guestNotificationTtl: 3600
+  ## 通知情報（会員）のレコード生存時間（秒）.
+  memberNotificationTtl: 5356800
+  ## 値下げ中ほしい本遷移先URL
+  discount:
+    url: /my/wishlist?cprfl=1&cid=sn_wishcp
+mobileDomain: |
+  @docomo.ne.jp
+  ezweb.ne.jp
+  @softbank.ne.jp
+  @d.vodafone.ne.jp
+  @h.vodafone.ne.jp
+  @t.vodafone.ne.jp
+  @k.vodafone.ne.jp
+  @r.vodafone.ne.jp
+  @s.vodafone.ne.jp
+  @n.vodafone.ne.jp
+  @q.vodafone.ne.jp
+  @c.vodafone.ne.jp
+  @jp-d.ne.jp
+  @jp-h.ne.jp
+  @jp-t.ne.jp
+  @jp-k.ne.jp
+  @jp-r.ne.jp
+  @jp-s.ne.jp
+  @jp-n.ne.jp
+  @jp-q.ne.jp
+  @jp-c.ne.jp
+  @disney.ne.jp
+  @pdx.ne.jp
+  willcom.com
+  @emnet.ne.jp
+filter:
+  token:
+    - /user_info
+    - /home-address
+    - /link/*
+    - /external-account/*
+  client:
+    - /user_info
+    - /home-address
+    - /link/*
+    - /external-account/*
+    - /member
+    - /external-site/*
+    - /diip/*
+  basic:
+    - /member
+    - /external-site/*
+  methodMap:
+    /external-site/**:
+      - DELETE
+    /member:
+      - POST
+api:
+  store:
+    scheme: http
+    host: localhost
+    port: 8090
+    storeInfoPath: /stores/%s
+    clientId: xxxxxxxxxx

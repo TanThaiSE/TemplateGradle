@@ -1,0 +1,46 @@
+apply plugin: 'checkstyle'
+apply plugin: 'findbugs'
+
+checkstyle {
+  reportsDir = file('./build/reports/checkstyle')
+  configFile = saveFileFromUrl("$checkstyle", 'checkstyle.xml')
+  ignoreFailures = true
+  showViolations = true
+  toolVersion = "$version_checkstyle"
+}
+
+checkstyleMain {
+  exclude('**/dto/**/*.java')
+}
+
+checkstyleTest {
+  exclude('**/*')
+}
+
+tasks.withType(FindBugs) {
+  reports {
+    xml.enabled = false
+    html.enabled = true
+  }
+}
+
+findbugs {
+  toolVersion = "$version_findbugs"
+  ignoreFailures = true
+}
+
+findbugsMain {
+  excludeFilter = saveFileFromUrl("$findbugs_exclude", 'findbugs-exclude.xml')
+}
+
+findbugsTest {
+  excludeFilter = saveFileFromUrl("$findbugs_exclude_test", 'findbugs-exclude-test.xml')
+}
+
+def saveFileFromUrl(url, name) {
+  def config = new File("config/$name")
+  if (config.exists()) {
+    config.delete()
+  }
+  config << new URL(url).openStream()
+}

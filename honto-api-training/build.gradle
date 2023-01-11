@@ -1,0 +1,138 @@
+buildscript {
+    repositories {
+        jcenter()
+        mavenCentral()
+        maven { url "http://repo.spring.io/libs-release" }
+        maven { url "http://repo.spring.io/snapshot" }
+        maven { url "http://repo.spring.io/milestone" }
+        maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+    }
+    dependencies {
+        classpath(
+          "org.springframework.boot:spring-boot-gradle-plugin:$spring_boot_version",
+          "org.springframework:springloaded:$spring_loaded_version",
+          "se.transmode.gradle:gradle-docker:1.2"
+        )
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'application'
+apply plugin: 'spring-boot'
+
+processResources.destinationDir = compileJava.destinationDir
+compileJava.dependsOn processResources
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+version = "$version_application"
+
+mainClassName = "jp.honto.MemberApplication"
+
+jar {
+    exclude 'logback.xml'
+    baseName = "honto-api-member"
+    version = "$version"
+}
+
+distZip {
+    archiveName = 'honto-api-member.zip'
+    from('src/main/resources/logback.xml') {
+      into 'honto-api-member/log'
+    }
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven { url "$honto_snapshot_repo_url" }
+    maven { url "$honto_release_repo_url" }
+    maven { url "http://repo.spring.io/snapshot" }
+    maven { url "http://repo.spring.io/milestone" }
+    maven { url "http://repo.spring.io/libs-release" }
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+}
+
+configurations {
+  testCompile.exclude module: 'com.oracle:ojdbc7_g'
+  provided
+}
+
+dependencies {
+//  compile("jp.honto.filter:spring-client-id-filter:1.2.8-SNAPSHOT") {
+//    exclude module: "jp.honto:gson-java8-builder"
+//    exclude module: "org.springframework.boot:spring-boot-starter-web"
+//  }
+  compile(
+    "org.springframework.boot:spring-boot-starter-web:$spring_boot_version",
+    "org.springframework.boot:spring-boot-starter-data-rest:$spring_boot_version",
+    "org.springframework.boot:spring-boot-starter-jdbc:$spring_boot_version",
+    "org.springframework.boot:spring-boot-starter-redis:$spring_boot_version",
+    "org.springframework.boot:spring-boot-starter-actuator:$spring_boot_version",
+    "org.seasar.doma:doma:${doma_version}",
+    "org.projectlombok:lombok:1.16.2",
+    "org.apache.commons:commons-lang3:3.3.2",
+    "com.oracle:ojdbc7_g:12.1.0.2",
+    "commons-codec:commons-codec:1.10",
+    "jp.honto.annotation:spring-validate-annotation:0.0.7",
+    "jp.honto.pagination:spring-honto-api-pagination:0.0.8-SNAPSHOT",
+//    "jp.honto.filter:spring-accesstoken-filter:1.0.5-SNAPSHOT",
+    "jp.honto:gson-java8-builder:1.1.2",
+    "com.zaxxer:HikariCP:2.4.7",
+    "jp.honto.redis:spring-honto-redis:0.0.1",
+    "jp.honto.exception:spring-honto-response-exception:1.2.6",
+    "jp.honto.annotation:spring-validate-annotation:0.0.8",
+    "jp.honto.util:spring-datetime-library:1.0.0",
+    "jp.honto.mail:honto-cuenote-client:1.1.0",
+    "jp.honto.autoconfigure:spring-cuenote-autoconfigure:0.0.1",
+    "jp.honto.util:spring-db-utilities:1.0.0",
+    "jp.honto.util:db-utilities:1.0.0"
+  )
+  compile("jp.honto.autoconfigure:spring-crejiro-autoconfigure:0.0.1-SNAPSHOT")
+  compile("jp.honto.crejiro:honto-crejiro-client:1.0.0-SNAPSHOT")
+  compile("jp.honto.sort:spring-honto-api-sort:0.0.1-SNAPSHOT")
+  testCompile(
+    "org.springframework.boot:spring-boot-starter-test:$spring_boot_version",
+    "com.jayway.restassured:rest-assured:2.4.0",
+    "org.dbunit:dbunit:2.4.9",
+    "com.github.springtestdbunit:spring-test-dbunit:1.2.1",
+    "org.jboss.arquillian.extension:arquillian-persistence-dbunit:1.0.0.Alpha7",
+    "org.assertj:assertj-core:3.4.1",
+    "jp.honto.util:spring-test-utilities:1.0.2"
+  )
+  testCompile("jp.honto.stub:crejiroapi-stub:1.0.0-SNAPSHOT") { exclude group: "crejiro", module: "crejiro" }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.3'
+}
+
+task sourceJar(type: Jar, dependsOn:classes) {
+  classifier = 'sources'
+  from sourceSets.main.allSource
+}
+
+javadoc {
+  options.encoding = 'UTF-8'
+  options.docEncoding = 'UTF-8'
+  options.charSet = 'UTF-8'
+}
+
+task javadocJar(type: Jar, dependsOn:javadoc) {
+  classifier = 'javadoc'
+  from javadoc.destinationDir
+}
+
+artifacts {
+  archives sourceJar
+  archives javadocJar
+}
+
+test {
+  ignoreFailures = true
+}
+
+apply from: 'tasks/idea.gradle'
+apply from:'tasks/eclipse.gradle'
+apply from: 'tasks/docker.gradle'
+apply from: 'tasks/check.gradle'

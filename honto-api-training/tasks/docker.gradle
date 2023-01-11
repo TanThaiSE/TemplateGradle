@@ -1,0 +1,21 @@
+apply plugin: 'docker'
+
+task buildDocker(type: Docker, dependsOn: build) {
+  description 'Build docker container image.'
+  push = true
+  project.group = "gcr.io/honto-development"
+  applicationName = "app-member"
+  tagVersion = "${dockerTag}"
+  dockerfile = file('docker/Dockerfile')
+  doFirst {
+    copy {
+      from "build/distributions/honto-api-member.zip"
+      from "script"
+      into "$buildDir/docker"
+    }
+    copy {
+      from "newrelic"
+      into "$buildDir/docker/newrelic"
+    }
+  }
+}
