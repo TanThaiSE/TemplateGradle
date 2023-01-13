@@ -1,0 +1,77 @@
+<configuration>
+
+    <!-- 標準出力 -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS, Asia/Tokyo} [%thread] %-5level %X{req.remoteHost} %X{req.requestURI} %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 標準出力ログ -->
+    <appender name="STDOUT_LOG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>/var/logs/stdout.log</file>
+        <append>true</append>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>/var/logs/stdout.log.%d{yyyyMMdd}</fileNamePattern>
+        </rollingPolicy>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS, Asia/Tokyo} [%thread] %-5level %X{req.remoteHost} %X{req.requestURI} %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- アプリケーションログ -->
+    <appender name="APP_LOG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>/var/logs/application.log</file>
+        <append>true</append>
+        <encoder>
+	        <charset>UTF-8</charset>
+	        <pattern>time:%d{yyyy-MM-dd HH:mm:ss.SSS, Asia/Tokyo}&#x9;level:%le&#x9;thread:%t&#x9;remoteHost:%X{req.remoteHost}&#x9;requestURI:%X{req.requestURI}&#x9;logger:%lo&#x9;msg:%replace(%replace(%m){'\n','|'}){'\t',' '}&#x9;exception:%replace(%replace(%xException{5}){'\n','|'}){'\t',' '}%nopex%n</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>/var/logs/application.log.%d{yyyyMMdd}</fileNamePattern>
+        </rollingPolicy>
+    </appender>
+
+    <!-- エラー監視ログ -->
+    <appender name="ERR_LOG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <append>true</append>
+        <encoder>
+	        <charset>UTF-8</charset>
+	        <pattern>time:%d{yyyy-MM-dd HH:mm:ss.SSS, Asia/Tokyo}&#x9;level:%le&#x9;thread:%t&#x9;remoteHost:%X{req.remoteHost}&#x9;requestURI:%X{req.requestURI}&#x9;logger:%lo&#x9;msg:%replace(%replace(%m){'\n','|'}){'\t',' '}&#x9;exception:%replace(%replace(%xException{5}){'\n','|'}){'\t',' '}%nopex%n</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>/var/logs/error.log.%d{yyyyMMdd}</fileNamePattern>
+        </rollingPolicy>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>TRACE</level>
+            <OnMatch>DENY</OnMatch>
+        </filter>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>WARN</level>
+        </filter>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="STDOUT_LOG_FILE" />
+        <appender-ref ref="APP_LOG_FILE" />
+        <appender-ref ref="ERR_LOG_FILE" />
+    </root>
+    <logger name="jp.honto.config.LogConfig" additivity="false" level="TRACE">
+        <appender-ref ref="STDOUT_LOG_FILE" />
+        <appender-ref ref="APP_LOG_FILE" />
+        <appender-ref ref="ERR_LOG_FILE" />
+    </logger>
+
+    <!-- DOMAのログ出力抑止 -->
+    <logger name="org.seasar.doma">
+        <level value="OFF" />
+    </logger>
+    <logger name="o.s.doma">
+        <level value="OFF" />
+    </logger>
+
+    <logger name="com.zaxxer.hikari" level="DEBUG" />
+
+</configuration>

@@ -1,0 +1,148 @@
+spring:
+  application:
+    name: user-api
+  datasource:
+    driverClassName: oracle.jdbc.OracleDriver
+    url: jdbc:oracle:thin:@127.0.0.1:1521:REFDB
+    username: honto2
+    password: HONTO2DF
+    schema: TRAININGJAVA1
+    poolName: default
+    maximumPoolSize: 30
+    maxLifetime: 601000
+    minimumIdle: 8
+    connectionTimeout: 30000
+  jackson:
+    property-naming-strategy: CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES
+  redis:
+    host: localhost
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect:org.hibernate.dialect.Oracle7gDialect
+encrypt:
+  aesEncryptionKey: honto2DFhonto2DF
+hconnect:
+  tokenVerifyUri: http://172.17.196.148:8081/token/verify
+filter:
+  token:
+    - /user_info
+    - /home-address
+    - /link/*
+    - /external-account/*
+  client:
+    - /user_info
+    - /home-address
+    - /link/*
+    - /external-account/*
+    - /member
+    - /external-site/*
+    - /diip/*
+  basic:
+    - /member
+    - /external-site/*
+  methodMap:
+    /external-site/**:
+      - DELETE
+    /member:
+      - POST
+logging:
+  enabled: true
+  path: /var/logs/
+  pattern: "time:%{yyyy-MM-dd HH:mm:ss.mmm}t\tthread:%I\tmethod:%m\tstatus:%s\trestime:%D\turi:%U\tparam:%q\tip:%h"
+  prefix: access.log.
+  fileDateFormat: yyyyMMdd
+  cron: 0 0 0 * * *
+management:
+  port: 8082
+endpoints:
+  health:
+    sensitive: false
+mobileDomain: |
+  @docomo.ne.jp
+  ezweb.ne.jp
+  @softbank.ne.jp
+  @d.vodafone.ne.jp
+  @h.vodafone.ne.jp
+  @t.vodafone.ne.jp
+  @k.vodafone.ne.jp
+  @r.vodafone.ne.jp
+  @s.vodafone.ne.jp
+  @n.vodafone.ne.jp
+  @q.vodafone.ne.jp
+  @c.vodafone.ne.jp
+  @jp-d.ne.jp
+  @jp-h.ne.jp
+  @jp-t.ne.jp
+  @jp-k.ne.jp
+  @jp-r.ne.jp
+  @jp-s.ne.jp
+  @jp-n.ne.jp
+  @jp-q.ne.jp
+  @jp-c.ne.jp
+  @disney.ne.jp
+  @pdx.ne.jp
+  willcom.com
+  @emnet.ne.jp
+
+##
+## 通知情報レコード設定.
+##
+notification:
+  ## 全ユーザ向け通知のレコード生存時間（秒）.
+  allUserNotificationTtl: 3600
+  ## 通知情報（ゲスト）のレコード生存時間（秒）.
+  guestNotificationTtl: 3600
+  ## 通知情報（会員）のレコード生存時間（秒）.
+  memberNotificationTtl: 5356800
+  ## 値下げ中ほしい本遷移先URL
+  discount:
+    url: /my/wishlist?cprfl=1&cid=sn_wishcp
+api:
+  store:
+    scheme: http
+    host: localhost
+    port: 8090
+    storeInfoPath: /stores/%s
+    clientId: xxxxxxxxxx
+  genre:
+    scheme: http
+    host: 172.17.196.150
+    port: 8380
+    path: /genre/%s
+    clientId: DjqX0x97CX
+  cart:
+    scheme: http
+    host: localhost
+    port: 8091
+    path: /cart/%s
+    clientId: Orus0NDEzK
+  itemCampaign:
+    scheme: http
+    host: localhost
+    port: 8092
+    path: /item/%s
+    clientId: AjqK8x57cY
+  hconnect:
+    scheme: http
+    host: hconnect
+    port: 8080
+    clientId: DjqX0x97CX
+honto:
+  cuenote:
+    server: http://localhost:9090/send
+    connectionTimeout: 1000
+    readTimeout: 1000
+  site:
+    confirmPasswordToken:
+      scheme: https
+      host: dev3.honto.jp
+      port: 443
+      path: /reg/forgot-pw/auth.html
+googleapis:
+  fcmServerKey: AAAAYLIljhs:APA91bGceCPnMVEoiR7UemOamCgo38N-qya7OMTFuP5aD9fjZIL7216CBxfRcXyNQRaahDyy1jvwkS1opPA2ImFWOAS4zrQkkDCZIKXnSqI4qEFRmpfynGcn43dZKheH_2PWzm4-Zfhu
+socialplus:
+  key: f53a1ebdbb1ae4a2c820dd208e63ee3f9836e8b8
