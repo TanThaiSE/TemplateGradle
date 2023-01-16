@@ -90,3 +90,7 @@ public class OracleDbConfig {
 	}
 }
 ```
+
+```
+<html><body><h1>Whitelabel Error Page</h1><p>This application has no explicit mapping for /error, so you are seeing this as a fallback.</p><div id='created'>Mon Jan 16 18:42:54 JST 2023</div><div>There was an unexpected error (type=Internal Server Error, status=500).</div><div>could not prepare statement</div></body></html>
+```
